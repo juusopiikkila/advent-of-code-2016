@@ -10,6 +10,7 @@
         "debug": "ts-node-dev --inspect --respawn --ignore-watch node_modules"
     },
     "dependencies": {
+        "@thi.ng/vectors": "6.0.0",
         "async": "^3.2.2",
         "easystarjs": "^0.4.4",
         "lodash": "^4.17.21"
