@@ -11,6 +11,10 @@ export async function readFileToArray(path: string): Promise<string[]> {
     return data.toString().split('\n').slice(0, -1);
 }
 
+export async function getInput(day: string): Promise<string[]> {
+    return readFileToArray(`${day}/input.txt`);
+}
+
 export function generateMap(width: number, height: number, fill: number): number[][] {
     const map = new Array(height);
 
