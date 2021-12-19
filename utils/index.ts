@@ -6,6 +6,12 @@ export interface Coord {
     y: number
 }
 
+export interface PathOptions {
+    acceptableTiles: number[]
+    tileCosts?: Record<string, number>
+    enableDiagonals?: boolean
+}
+
 export async function readFileToArray(path: string): Promise<string[]> {
     const data = await readFile(path);
     return data.toString().split('\n').slice(0, -1);
@@ -25,16 +31,30 @@ export function generateMap(width: number, height: number, fill: number): number
     return map;
 }
 
-export async function findPath(map: number[][], from: Coord, to: Coord): Promise<Coord[]> {
+export async function findPath(
+    map: number[][],
+    from: Coord,
+    to: Coord,
+    options: PathOptions,
+): Promise<Coord[] | undefined> {
     return new Promise((resolve) => {
         const easystar = new EasyStar();
 
         easystar.setGrid(map);
-        easystar.setAcceptableTiles([0]);
-        easystar.enableDiagonals();
+        easystar.setAcceptableTiles(options.acceptableTiles);
+
+        if (options.enableDiagonals) {
+            easystar.enableDiagonals();
+        }
+
+        if (options.tileCosts) {
+            Object.entries(options.tileCosts).forEach(([tile, cost]) => {
+                easystar.setTileCost(Number(tile), cost);
+            });
+        }
 
         easystar.findPath(from.x, from.y, to.x, to.y, (path) => {
-            resolve(path);
+            resolve(path || undefined);
         });
 
         easystar.calculate();
